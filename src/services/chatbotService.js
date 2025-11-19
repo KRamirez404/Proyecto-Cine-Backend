@@ -245,9 +245,33 @@ const procesarMensaje = async (mensaje, id_cliente = null) => {
         limit: 10
       });
 
+      if (peliculasCartelera.length === 0) {
+        respuesta = {
+          tipo: 'CARTELERA_VACIA',
+          mensaje: 'Por ahora no tenemos películas en cartelera. 🎬 Vuelve pronto para ver los próximos estrenos.',
+        };
+        break;
+      }
+
+      // Construir lista numerada de títulos para mostrar en el chat
+      const listaPeliculas = peliculasCartelera
+        .map((p, index) => `${index + 1}. ${p.titulo}`)
+        .join('\n');
+
       respuesta = {
         tipo: 'CARTELERA',
-        mensaje: `Tenemos ${peliculasCartelera.length} películas en cartelera:`,
+        mensaje:
+          `Tenemos ${peliculasCartelera.length} películas en cartelera:\n\n${listaPeliculas}\n\n` +
+          '¿Quieres que te ayude a comprar boletos para alguna de estas películas?\n' +
+          'Solo dime el número o el nombre de la película.\n\n' +
+          'Vale, te ayudaré con tu compra:\n' +
+          '1. Ve a la sección Cartelera.\n' +
+          '2. Selecciona la película de tu interés.\n' +
+          '3. Eso te llevará a la sección de selección de horarios y funciones.\n' +
+          '4. Selecciona cuándo y en qué formato quieres ver la película.\n' +
+          '5. Selecciona los asientos.\n' +
+          '6. Completa la información de pago.\n' +
+          '7. ¡Disfruta de tu película! Vuelve pronto...',
         peliculas: peliculasCartelera.map(p => ({
           id: p.id,
           titulo: p.titulo,
@@ -255,7 +279,7 @@ const procesarMensaje = async (mensaje, id_cliente = null) => {
           duracion: p.duracion,
           calificacion: p.calificacion
         })),
-        sugerencia: 'Puedes preguntarme por horarios de alguna película específica'
+        sugerencia: 'Puedes decir, por ejemplo: "Quiero comprar boletos para la 2"'
       };
       break;
 
@@ -382,15 +406,18 @@ const procesarMensaje = async (mensaje, id_cliente = null) => {
           }))
         };
       } else {
+        // Segundo mensaje: explicar paso a paso cómo comprar desde la UI
         respuesta = {
-          tipo: 'ACLARACION_COMPRA',
-          mensaje: 'Para ayudarte a comprar boletos, necesito saber:',
-          preguntas: [
-            '¿Qué película te interesa?',
-            '¿Cuántas entradas necesitas?',
-            '¿Para qué día y hora?'
-          ],
-          sugerencia: 'Ejemplo: "Quiero 2 entradas para Intensamente 2 a las 6"'
+          tipo: 'FLUJO_COMPRA',
+          mensaje:
+            'Vale, te ayudaré con tu compra:\n' +
+            '1. Ve a la sección Cartelera.\n' +
+            '2. Selecciona la película de tu interés.\n' +
+            '3. Eso te llevará a la sección de selección de horarios y funciones.\n' +
+            '4. Selecciona cuándo y en qué formato quieres ver la película.\n' +
+            '5. Selecciona los asientos.\n' +
+            '6. Completa la información de pago.\n' +
+            '7. ¡Disfruta de tu película! Vuelve pronto...'
         };
       }
       break;
