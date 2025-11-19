@@ -128,8 +128,16 @@ const extraerEntidades = async (texto) => {
     }
   }
 
-  // Extraer fechas
-  const fechas = doc.dates().out('array');
+ 
+   // Extraer fechas (protegido por si el plugin no está disponible)
+  let fechas = [];
+  if (typeof doc.dates === 'function') {
+    try {
+      fechas = doc.dates().out('array');
+    } catch (e) {
+      fechas = [];
+    }
+  }
   
   // Extraer números (para horarios, precios, cantidad de boletos)
   const numeros = doc.numbers().out('array');

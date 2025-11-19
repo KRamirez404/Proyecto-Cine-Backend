@@ -43,19 +43,19 @@ const seedDatabase = async () => {
     const usuarios = await Usuario.bulkCreate([
       {
         nombre: 'Administrador Principal',
-        usuario: 'admin',
+        usuario: 'admin@cine',
         contrasena: 'admin123', // Will be hashed by model hook
         rol: 'ADMIN',
       },
       {
         nombre: 'Juan Cajero',
-        usuario: 'cajero1',
+        usuario: 'cajero1@cine',
         contrasena: 'cajero123',
         rol: 'CAJERO',
       },
       {
         nombre: 'María Cajero',
-        usuario: 'cajero2',
+        usuario: 'cajero2@cine',
         contrasena: 'cajero123',
         rol: 'CAJERO',
       },
